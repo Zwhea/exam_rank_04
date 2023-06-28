@@ -33,7 +33,7 @@ void	cd_builtin(char **av)
 	return ;
 }
 
-void	execute(char **av, char **env, bool last)
+void	execute(char **av, char **env, bool is_last_cmd)
 {
 	int	pid;
 	int	fd[2];
@@ -64,7 +64,7 @@ void	execute(char **av, char **env, bool last)
 	{
 		close(fd[1]);
 		////dup si on n'est pas sur la derniere commande - in
-		if (last == false)
+		if (is_last_cmd == false)
 			dup2(fd[0], STDIN_FILENO);
 		close(fd[0]);
 		waitpid(-1, 0, 0);
@@ -74,7 +74,7 @@ void	execute(char **av, char **env, bool last)
 	{
 		close(fd[0]);
 		////dup si on n'est pas sur la derniere commande - out
-		if (last == false)
+		if (is_last_cmd == false)
 			dup2(fd[1], STDOUT_FILENO);
 		close(fd[1]);
 		if (execve(av[0], av, env) == -1)
